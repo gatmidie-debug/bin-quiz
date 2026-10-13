@@ -1,0 +1,488 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIN QUIZ | RECON SYSTEM</title>
+<style>
+:root {
+  --red:#ff2948;
+  --bg:#080a10;
+  --panel:#111620;
+  --text:#f4f6fb;
+  --muted:#9ba6b8;
+  --green:#36e6a0;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;min-height:100vh;
+  background-image:radial-gradient(ellipse at top,#35101d 0%,#080a10 60%);
+}
+button{font:inherit;cursor:pointer;transition:.2s}
+button:focus-visible{outline:3px solid white;outline-offset:3px}
+button:hover{filter:brightness(1.15);transform:translateY(-1px)}
+button:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.hidden{display:none!important}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px clamp(16px,4vw,45px);border-bottom:1px solid #282c38;
+  gap:12px;flex-wrap:wrap
+}
+.logo{font-weight:1000;letter-spacing:3px;font-size:20px}
+.logo span{color:var(--red)}
+.status{font-size:11px;letter-spacing:1.5px;color:var(--green)}
+main{width:min(850px,94%);margin:35px auto 60px}
+.panel{
+  background:rgba(17,22,32,.95);border:1px solid #292f3e;
+  border-radius:18px;padding:clamp(18px,4vw,35px);
+  box-shadow:0 20px 70px #0007
+}
+.kicker{font-size:11px;letter-spacing:3px;color:var(--red);font-weight:bold}
+h1{font-size:clamp(27px,5vw,45px);margin:12px 0}
+h2{font-size:clamp(22px,4vw,30px);margin:12px 0}
+p{color:var(--muted);line-height:1.65}
+.device-grid,.answers,.actions{display:grid;gap:12px}
+.device-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:25px}
+.btn{
+  padding:14px 18px;border:1px solid #363d4d;border-radius:11px;
+  color:var(--text);background:#1a202d;font-weight:bold
+}
+.btn.primary{background:var(--red);border-color:var(--red);color:white}
+.btn.green{background:#123b30;border-color:#24785d}
+.btn.small{padding:10px 12px;font-size:12px}
+.device-btn{padding:28px 12px;font-size:17px}
+.device-btn strong{display:block;font-size:34px;margin-bottom:12px}
+.topline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pill{background:#1c2330;padding:8px 12px;border-radius:8px;font-size:12px}
+.pill b{color:var(--red)}
+.progress{height:7px;background:#292e3a;border-radius:20px;overflow:hidden;margin:20px 0}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#ff2948,#ff6b81);transition:width .3s}
+.question{font-size:clamp(20px,3.5vw,27px);line-height:1.4;margin:25px 0}
+.answers{grid-template-columns:repeat(2,minmax(0,1fr))}
+.answer{text-align:left;min-height:65px;padding:15px;border:1px solid #333b4c;background:#151b27;color:white;border-radius:11px;line-height:1.45}
+.answer .letter{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;background:#292f3e;margin-right:10px;font-weight:bold}
+.answer.selected{border-color:var(--red);background:#351723}
+.answer.correct{border-color:var(--green);background:#103026}
+.answer.wrong{border-color:var(--red);background:#381722}
+.actions{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:20px}
+.actions .btn{font-size:13px;padding:13px 7px}
+.note{border-left:3px solid var(--red);padding:10px 14px;background:#191a25;font-size:12px;color:#bbc3d0;line-height:1.6;margin-top:18px}
+.warning{
+  border:1px solid var(--red);background:#40101c;color:#fff;
+  border-radius:12px;padding:14px;margin:15px 0;
+  animation:blink 1s infinite
+}
+@keyframes blink{50%{box-shadow:0 0 24px #ff294866}}
+.big-score{font-size:clamp(55px,12vw,90px);font-weight:1000;color:var(--red);margin:10px 0}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:25px 0}
+.stat{background:#1a202d;padding:15px 8px;border-radius:12px;text-align:center}
+.stat strong{display:block;font-size:24px;margin-bottom:6px}
+.stat span{font-size:11px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--red);padding:8px 12px;border-radius:8px;color:#ff7185;font-weight:bold;letter-spacing:1px}
+.log{max-height:220px;overflow:auto;background:#090c12;border:1px solid #2a3040;padding:12px;border-radius:10px;font-size:12px;line-height:1.8}
+.log div{border-bottom:1px solid #202633;padding:5px 0}
+.footer{text-align:center;color:#667083;font-size:11px;margin-top:25px}
+label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin:14px 0}
+input[type=checkbox]{accent-color:var(--red);width:17px;height:17px}
+@media(max-width:560px){
+ main{margin:20px auto 35px}
+ .answers,.device-grid{grid-template-columns:1fr}
+ .answer{min-height:57px}
+ .actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stats{gap:6px}
+ .stat strong{font-size:20px}
+ header{padding:15px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">BIN<span>_QUIZ</span></div>
+  <div class="status">● RECON SYSTEM / LOCAL MODE</div>
+</header>
+
+<main>
+  <section id="home" class="panel">
+    <div class="kicker">PERSONAL KNOWLEDGE TEST / 001</div>
+    <h1>HIỂU BIN ĐẾN ĐÂU?</h1>
+    <p>20 câu hỏi. 10 điểm. Một bài kiểm tra xem mày hiểu Bin đến mức nào.</p>
+    <div class="note">RECON có thể ghi nhận một số sự kiện của trang trong lúc làm bài. Cảnh báo không phải bằng chứng chắc chắn về gian lận.</div>
+    <h2>Bạn đang sử dụng thiết bị gì?</h2>
+    <div class="device-grid">
+      <button class="btn device-btn" onclick="chooseDevice('Điện thoại')"><strong>📱</strong>ĐIỆN THOẠI</button>
+      <button class="btn device-btn" onclick="chooseDevice('Máy tính')"><strong>💻</strong>MÁY TÍNH</button>
+    </div>
+    <label><input type="checkbox" id="shuffle"> Xáo trộn thứ tự câu hỏi</label>
+    <label><input type="checkbox" id="sound"> Bật âm thanh giao diện</label>
+    <button class="btn primary" style="width:100%;margin-top:8px" onclick="startQuiz()">KHỞI ĐỘNG BÀI KIỂM TRA →</button>
+  </section>
+
+  <section id="quiz" class="panel hidden">
+    <div class="topline">
+      <span class="pill">THIẾT BỊ: <b id="deviceLabel">Máy tính</b></span>
+      <span class="pill">THỜI GIAN: <b id="timer">00:00</b></span>
+      <span class="pill">RECON: <b id="warningCount">0</b> cảnh báo</span>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="topline">
+      <span class="kicker" id="questionNumber">CÂU 01 / 20</span>
+      <span class="pill">ĐIỂM TỐI ĐA: <b>10</b></span>
+    </div>
+    <div class="question" id="questionText"></div>
+    <div class="answers" id="answerList"></div>
+    <div id="feedback" class="note hidden"></div>
+    <div id="liveWarning" class="warning hidden" role="alert"></div>
+    <div class="actions">
+      <button class="btn" id="prevBtn" onclick="moveQuestion(-1)">← CÂU TRƯỚC</button>
+      <button class="btn" id="nextBtn" onclick="moveQuestion(1)">CÂU TIẾP →</button>
+      <button class="btn primary" onclick="finishQuiz()">NỘP BÀI ✓</button>
+    </div>
+    <div class="actions">
+      <button class="btn small" onclick="toggleFullscreen()">⛶ TOÀN MÀN HÌNH</button>
+      <button class="btn small" onclick="showReconLog()">📋 NHẬT KÝ RECON</button>
+      <button class="btn small" onclick="confirmReset()">↻ LÀM LẠI</button>
+    </div>
+    <div id="reconLogBox" class="note hidden">
+      <b>NHẬT KÝ SỰ KIỆN</b>
+      <div id="reconLog" class="log" style="margin-top:10px"></div>
+    </div>
+    <div class="note">Cảnh báo được ghi nhận khi trang chuyển sang nền hoặc mất tiêu điểm. Trình duyệt không thể xác định chắc chắn lý do người chơi rời trang.</div>
+  </section>
+
+  <section id="result" class="panel hidden">
+    <div class="kicker">RECON REPORT / FINAL ANALYSIS</div>
+    <h1 id="resultTitle">KẾT QUẢ KIỂM TRA</h1>
+    <div class="big-score"><span id="score">0</span><span style="font-size:28px"> / 10</span></div>
+    <div class="badge" id="rank">ĐANG PHÂN TÍCH</div>
+    <p id="comment"></p>
+    <div class="stats">
+      <div class="stat"><strong id="correctCount">0</strong><span>CÂU ĐÚNG</span></div>
+      <div class="stat"><strong id="wrongCount">0</strong><span>CÂU SAI</span></div>
+      <div class="stat"><strong id="finalTime">00:00</strong><span>THỜI GIAN</span></div>
+    </div>
+    <div id="finalRecon" class="note"></div>
+    <h2>NHẬT KÝ RECON</h2>
+    <div id="finalLog" class="log"></div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz()">CHƠI LẠI</button>
+      <button class="btn" onclick="backHome()">ĐỔI THIẾT BỊ</button>
+      <button class="btn" onclick="reviewAnswers()">XEM ĐÁP ÁN</button>
+    </div>
+    <div id="reviewBox" class="note hidden"></div>
+  </section>
+  <div class="footer">BIN QUIZ v1.0 · XỬ LÝ CỤC BỘ · KHÔNG GỬI DỮ LIỆU RA NGOÀI</div>
+</main>
+
+<script>
+"use strict";
+
+const questions = [
+ {q:"Hoạt động nào Bin thích?",a:["Chơi game","Đan len","Sưu tầm tem","Trồng cây"],c:0,e:"Theo thông tin đã có, Bin thích chơi game."},
+ {q:"Một thứ Bin thích là gì?",a:["Tiền","Đá cuội","Lá khô","Vỏ ốc"],c:0,e:"Bin từng nói mình thích tiền."},
+ {q:"Bin thích loại mì nào?",a:["Mì cay","Mì không vị","Chỉ ăn bánh mì","Không có thông tin"],c:0,e:"Mì cay là một trong những sở thích đã được nhắc đến."},
+ {q:"Khi nào Bin thường chill?",a:["Khi sắp thi","Chỉ vào sáng thứ Hai","Khi mất điện","Không bao giờ"],c:0,e:"Bin từng nói thường chill khi kỳ thi sắp đến."},
+ {q:"Thông tin nào đúng về thói quen học của Bin?",a:["Chưa chắc Bin học đều","Chắc chắn học 12 tiếng/ngày","Không bao giờ học","Luôn đứng nhất lớp"],c:0,e:"Chưa có đủ thông tin để khẳng định Bin học đều."},
+ {q:"Theo thông tin Bin từng kể, Bin thích ai theo thứ tự nào?",a:["Chị rồi đến em trai","Em trai rồi đến chị","Chỉ bạn cùng lớp","Chưa từng nói"],c:0,e:"Đây là thông tin được Bin cung cấp."},
+ {q:"Số câu hỏi của bài kiểm tra này là bao nhiêu?",a:["10","15","20","30"],c:2,e:"Bài kiểm tra được thiết kế gồm 20 câu."},
+ {q:"Mỗi câu đúng được bao nhiêu điểm?",a:["0,25","0,5","1","2"],c:1,e:"20 câu × 0,5 điểm = 10 điểm."},
+ {q:"Tổng điểm tối đa là bao nhiêu?",a:["5 điểm","8 điểm","10 điểm","20 điểm"],c:2,e:"Tổng điểm tối đa là 10."},
+ {q:"Bin thích chơi game. Nhận định này là gì?",a:["Thông tin đã biết","Thông tin chắc chắn sai","Không liên quan","Chỉ là kết quả Recon"],c:0,e:"Đây là sở thích đã được Bin chia sẻ."},
+ {q:"Nếu không biết Bin thích món ăn nào khác, nên làm gì?",a:["Tự bịa đáp án","Khẳng định đại một món","Không tự khẳng định thông tin chưa biết","Báo gian lận"],c:2,e:"Không nên biến điều chưa biết thành sự thật."},
+ {q:"Nếu Bin chưa chắc có học đều không, kết luận hợp lý là gì?",a:["Chắc chắn học đều","Chưa đủ thông tin","Chắc chắn bỏ học","Chắc chắn đứng nhất"],c:1,e:"Chưa đủ thông tin không đồng nghĩa với kết luận tiêu cực."},
+ {q:"Nếu trả lời đúng 10 câu, được bao nhiêu điểm?",a:["2,5","5","7,5","10"],c:1,e:"10 × 0,5 = 5 điểm."},
+ {q:"Nếu trả lời đúng 16 câu, được bao nhiêu điểm?",a:["6","7","8","9"],c:2,e:"16 × 0,5 = 8 điểm."},
+ {q:"Nếu trả lời đúng cả 20 câu, được bao nhiêu điểm?",a:["8","9","9,5","10"],c:3,e:"20 × 0,5 = 10 điểm."},
+ {q:"RECON trong trang này dùng để làm gì?",a:["Ghi nhận một số sự kiện của trang","Đọc mọi tin nhắn riêng","Bật camera bí mật","Theo dõi mọi ứng dụng"],c:0,e:"RECON ở đây chỉ ghi nhận các sự kiện trình duyệt có thể phát hiện."},
+ {q:"Nếu người chơi chuyển tab, hệ thống nên làm gì?",a:["Tự động kết luận gian lận","Ghi nhận sự kiện và cảnh báo","Xóa máy tính","Tự bật camera"],c:1,e:"Chuyển tab có thể có nhiều lý do, không phải bằng chứng chắc chắn."},
+ {q:"Cảnh báo RECON có chứng minh chắc chắn người chơi gian lận không?",a:["Có, luôn luôn","Không","Chỉ khi được 3 lần","Chỉ khi màn hình đỏ"],c:1,e:"Cảnh báo chỉ là dấu hiệu cần xem xét."},
+ {q:"Dữ liệu của bài kiểm tra này được xử lý ở đâu?",a:["Trên máy của người chơi trong trình duyệt","Tự động gửi cho người lạ","Trên camera","Không nơi nào"],c:0,e:"Phiên bản này không gửi dữ liệu ra máy chủ."},
+ {q:"Mục đích chính của bài quiz là gì?",a:["Kiểm tra mức độ hiểu biết về Bin","Lấy mật khẩu","Theo dõi bí mật","Đo tốc độ mạng"],c:0,e:"Bài quiz tập trung vào thông tin đã biết về Bin."}
+];
+
+let device = "Máy tính";
+let order = [];
+let current = 0;
+let answers = {};
+let warnings = [];
+let started = false;
+let startTime = 0;
+let elapsedBefore = 0;
+let timerInterval = null;
+let lastWarningAt = 0;
+let soundOn = false;
+let finished = false;
+let fullscreenWasActive = false;
+
+const $ = id => document.getElementById(id);
+const fmtTime = seconds => {
+  seconds = Math.max(0, Math.floor(seconds));
+  return String(Math.floor(seconds/60)).padStart(2,"0")+":"+
+         String(seconds%60).padStart(2,"0");
+};
+function elapsed(){
+  return elapsedBefore + (started && !finished ? (Date.now()-startTime)/1000 : 0);
+}
+function chooseDevice(value){
+  device = value;
+  $("deviceLabel").textContent = value;
+  $("home").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  $("result").classList.add("hidden");
+}
+function backHome(){
+  stopTimer();
+  started = false;
+  finished = false;
+  $("result").classList.add("hidden");
+  $("quiz").classList.add("hidden");
+  $("home").classList.remove("hidden");
+}
+function startQuiz(){
+  stopTimer();
+  soundOn = $("sound").checked;
+  order = questions.map((_,i)=>i);
+  if($("shuffle").checked){
+    for(let i=order.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [order[i],order[j]]=[order[j],order[i]];
+    }
+  }
+  current = 0;
+  answers = {};
+  warnings = [];
+  lastWarningAt = 0;
+  elapsedBefore = 0;
+  startTime = Date.now();
+  started = true;
+  finished = false;
+  fullscreenWasActive = false;
+  $("warningCount").textContent = "0";
+  $("liveWarning").classList.add("hidden");
+  $("reconLogBox").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  $("home").classList.add("hidden");
+  $("result").classList.add("hidden");
+  addLog("Bài kiểm tra bắt đầu trên thiết bị: "+device+".");
+  renderQuestion();
+  timerInterval = setInterval(updateTimer,500);
+  updateTimer();
+}
+function stopTimer(){
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+}
+function updateTimer(){
+  $("timer").textContent = fmtTime(elapsed());
+}
+function renderQuestion(){
+  const q = questions[order[current]];
+  $("questionNumber").textContent =
+    "CÂU "+String(current+1).padStart(2,"0")+" / "+order.length;
+  $("questionText").textContent = q.q;
+  $("progressFill").style.width = ((current+1)/order.length*100)+"%";
+  $("prevBtn").disabled = current===0;
+  $("nextBtn").disabled = current===order.length-1;
+  $("answerList").innerHTML = "";
+  $("feedback").classList.add("hidden");
+
+  q.a.forEach((text,index)=>{
+    const b = document.createElement("button");
+    b.className = "answer"+(answers[order[current]]===index?" selected":"");
+    b.innerHTML = '<span class="letter">'+String.fromCharCode(65+index)+'</span>';
+    const label = document.createElement("span");
+    label.textContent = text;
+    b.appendChild(label);
+    b.onclick = ()=>selectAnswer(index);
+    $("answerList").appendChild(b);
+  });
+}
+function selectAnswer(index){
+  if(finished) return;
+  answers[order[current]] = index;
+  playTone(550);
+  renderQuestion();
+  const feedback = $("feedback");
+  feedback.textContent = "Đã chọn đáp án "+String.fromCharCode(65+index)+".";
+  feedback.classList.remove("hidden");
+}
+function moveQuestion(delta){
+  const next = current+delta;
+  if(next<0 || next>=order.length) return;
+  current = next;
+  renderQuestion();
+}
+function addLog(message){
+  warnings.push({time:fmtTime(elapsed()),message});
+  $("warningCount").textContent = warnings.length;
+  const log = $("reconLog");
+  if(log){
+    const item = document.createElement("div");
+    item.textContent = "["+warnings[warnings.length-1].time+"] "+message;
+    log.appendChild(item);
+  }
+}
+function showWarning(message){
+  if(!started || finished) return;
+  const now = Date.now();
+  // Gộp các sự kiện liên tiếp trong vòng 2 giây để tránh đếm trùng.
+  if(now-lastWarningAt<2000) return;
+  lastWarningAt = now;
+  addLog(message);
+  const box = $("liveWarning");
+  box.textContent = "⚠️ CẢNH BÁO! BẠN ĐANG BỊ GIÁM SÁT! "+message;
+  box.classList.remove("hidden");
+  if(warnings.length>=3){
+    box.textContent += " BÀI LÀM CÓ DẤU HIỆU BẤT THƯỜNG.";
+  }
+  playTone(180);
+}
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden) showWarning("Trang chuyển sang nền hoặc tab khác.");
+});
+window.addEventListener("blur",()=>{
+  if(!document.hidden) showWarning("Cửa sổ trình duyệt mất tiêu điểm.");
+});
+document.addEventListener("fullscreenchange",()=>{
+  if(!started || finished) return;
+  if(document.fullscreenElement) fullscreenWasActive = true;
+  else if(fullscreenWasActive) showWarning("Đã thoát chế độ toàn màn hình.");
+});
+function toggleFullscreen(){
+  if(!document.fullscreenElement){
+    if(document.documentElement.requestFullscreen){
+      document.documentElement.requestFullscreen().catch(()=>{
+        alert("Trình duyệt không cho phép bật toàn màn hình.");
+      });
+    }else alert("Trình duyệt này không hỗ trợ toàn màn hình.");
+  }else if(document.exitFullscreen){
+    document.exitFullscreen().catch(()=>{});
+  }
+}
+function showReconLog(){
+  $("reconLogBox").classList.toggle("hidden");
+}
+function confirmReset(){
+  if(confirm("Làm lại bài kiểm tra? Tiến độ hiện tại sẽ bị xóa.")) startQuiz();
+}
+function playTone(freq){
+  if(!soundOn) return;
+  try{
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillator.frequency.value = freq;
+    oscillator.type = "sine";
+    gain.gain.value = 0.035;
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    oscillator.start();
+    oscillator.stop(ctx.currentTime+0.08);
+    oscillator.onended = ()=>ctx.close();
+  }catch(e){}
+}
+function finishQuiz(){
+  if(!started || finished) return;
+  const unanswered = order.filter(id=>answers[id]===undefined).length;
+  if(unanswered>0){
+    if(!confirm("Còn "+unanswered+" câu chưa trả lời. Vẫn nộp bài?")) return;
+  }
+  finished = true;
+  started = false;
+  elapsedBefore = elapsedBefore + (Date.now()-startTime)/1000;
+  stopTimer();
+
+  let correct = 0;
+  order.forEach(id=>{
+    if(answers[id]===questions[id].c) correct++;
+  });
+  const score = correct*0.5;
+  const wrong = order.length-correct;
+  let rank, comment;
+
+  if(score<4){
+    rank="CẦN TÌM HIỂU BIN THÊM";
+    comment="Tôi thất vọng về bạn… Bạn thực sự hiểu Bin chứ? Có vẻ cần tìm hiểu thêm rồi.";
+  }else if(score<7){
+    rank="ĐÃ HIỂU BIN";
+    comment="Bạn cũng hiểu Bin đấy, nhưng vẫn còn thiếu một chút!";
+  }else if(score<10){
+    rank="NGƯỜI HIỂU BIN";
+    comment="Tôi tự hào về bạn! Bạn thực sự hiểu Bin!";
+  }else{
+    rank="HUYỀN THOẠI HIỂU BIN";
+    comment="HUYỀN THOẠI! BẠN LÀ NGƯỜI HIỂU BIN NHẤT!";
+    celebrate();
+  }
+
+  $("score").textContent=score.toFixed(1);
+  $("correctCount").textContent=correct;
+  $("wrongCount").textContent=wrong;
+  $("finalTime").textContent=fmtTime(elapsedBefore);
+  $("rank").textContent=rank;
+  $("comment").textContent=comment;
+  $("resultTitle").textContent=score===10?"HOÀN HẢO!":"KẾT QUẢ KIỂM TRA";
+  $("finalRecon").textContent =
+    "RECON: "+warnings.length+" sự kiện được ghi nhận. "+
+    (warnings.length>=3
+      ?"Có nhiều sự kiện bất thường; điều này không tự chứng minh gian lận."
+      :"Không đạt ngưỡng 3 cảnh báo. Điều này không chứng minh hay loại trừ gian lận.");
+  renderFinalLog();
+  $("quiz").classList.add("hidden");
+  $("result").classList.remove("hidden");
+}
+function renderFinalLog(){
+  const box=$("finalLog");
+  box.innerHTML="";
+  if(warnings.length===0){
+    const div=document.createElement("div");
+    div.textContent="Không ghi nhận sự kiện cảnh báo nào.";
+    box.appendChild(div);
+    return;
+  }
+  warnings.forEach(w=>{
+    const div=document.createElement("div");
+    div.textContent="["+w.time+"] "+w.message;
+    box.appendChild(div);
+  });
+}
+function reviewAnswers(){
+  const box=$("reviewBox");
+  box.innerHTML="";
+  questions.forEach((q,id)=>{
+    const div=document.createElement("div");
+    div.style.padding="8px 0";
+    div.style.borderBottom="1px solid #303747";
+    const chosen=answers[id]===undefined?"Chưa trả lời":
+      String.fromCharCode(65+answers[id])+". "+q.a[answers[id]];
+    const correct=String.fromCharCode(65+q.c)+". "+q.a[q.c];
+    div.textContent=(id+1)+". "+q.q+" | Bạn: "+chosen+" | Đáp án: "+correct;
+    box.appendChild(div);
+  });
+  box.classList.toggle("hidden");
+}
+function celebrate(){
+  // Hiệu ứng pháo giấy nhẹ, không cần thư viện ngoài.
+  for(let i=0;i<45;i++){
+    const piece=document.createElement("div");
+    piece.style.cssText=
+      "position:fixed;left:"+Math.random()*100+"%;top:-15px;width:7px;height:12px;"+
+      "background:"+(Math.random()>.5?"#ff2948":"#36e6a0")+";z-index:9999;pointer-events:none;"+
+      "animation:fall "+(1.5+Math.random()*2)+"s linear forwards";
+    document.body.appendChild(piece);
+    setTimeout(()=>piece.remove(),4000);
+  }
+  if(!document.getElementById("fallStyle")){
+    const style=document.createElement("style");
+    style.id="fallStyle";
+    style.textContent="@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}";
+    document.head.appendChild(style);
+  }
+  playTone(800);
+}
+</script>
+</body>
+</html>
