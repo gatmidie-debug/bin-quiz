@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bin Quiz 💗 FAKE MONITOR 2.0</title>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:dark}
+body{
+ margin:0;min-height:100vh;padding:18px;
+ font-family:Arial,sans-serif;color:#fff5fc;
+ background:
+ radial-gradient(circle at 10% 20%,#ffbde533 0 70px,transparent 72px),
+ radial-gradient(circle at 90% 15%,#cbb9ff33 0 100px,transparent 102px),
+ radial-gradient(circle at 80% 85%,#8deaff22 0 120px,transparent 122px),
+ linear-gradient(135deg,#21132e,#171a39 55%,#302044);
+}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.app{max-width:1000px;margin:auto}
+header{text-align:center;padding:12px 0 22px}
+.logo{font-size:clamp(30px,6vw,49px);font-weight:1000;letter-spacing:1px}
+.logo span{color:#ffa8df}
+.sub{color:#d2b8e8;margin-top:9px}
+.panel{
+ background:#211b36ed;border:1px solid #76547f;
+ border-radius:25px;padding:clamp(18px,4vw,34px);
+ box-shadow:0 20px 65px #08051070;margin-bottom:18px;
+}
+.hidden{display:none!important}
+h1,h2,h3{margin-top:0}
+p{line-height:1.65;color:#ddcfe9}
+.tag{display:inline-block;padding:7px 12px;border-radius:30px;background:#58365c;color:#ffd0ec;font-size:12px;font-weight:bold}
+.primary{
+ background:linear-gradient(120deg,#ff9dd8,#c6b0ff);
+ color:#28152f;font-weight:900;border:0;border-radius:13px;
+ padding:14px 19px;transition:.2s
+}
+.primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.wide{width:100%;margin-top:16px}
+.devices{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.device{
+ background:#322541;border:1px solid #76547f;border-radius:17px;
+ padding:22px 10px;color:white;text-align:center;transition:.2s
+}
+.device:hover{background:#4b3158;transform:translateY(-3px);border-color:#ff9dd8}
+.device .emoji{font-size:43px;display:block;margin-bottom:10px}
+.device b{display:block;margin-bottom:7px}
+.device small{color:#d8bfeb}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.stat{padding:14px 5px;text-align:center;background:#30243f;border-radius:14px}
+.stat b{display:block;color:#ffa9dc;font-size:23px;margin-bottom:5px}
+.stat small{color:#d6c3e2}
+.monitor{border-color:#a45a94;background:linear-gradient(145deg,#211a35,#301e3b)}
+.monitorHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.live{color:#8fffc9;font-size:12px;font-weight:bold}
+.live:before{content:"● ";color:#71ffb7}
+.scanbox{background:#130f23;border:1px solid #694c79;border-radius:16px;padding:17px;margin:16px 0}
+.scanline{height:9px;background:#47304f;border-radius:20px;overflow:hidden;margin:12px 0}
+.scanbar{height:100%;width:0;background:linear-gradient(90deg,#ff8bd4,#bca6ff);transition:width .5s}
+.monitorRows{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mrow{background:#30243f;padding:12px;border-radius:12px;color:#ddcbe8;font-size:13px}
+.mrow b{display:block;color:#a7ffdb;margin-top:6px}
+.notice{font-size:12px;color:#c5b0d5}
+.topline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#e2cce9;font-size:14px}
+.track{height:8px;background:#49324e;border-radius:20px;overflow:hidden;margin:14px 0 24px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#ff99d7,#b5a5ff);transition:width .3s}
+.question{font-size:clamp(21px,4vw,29px);line-height:1.45;margin:20px 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.answer{display:flex;align-items:center;gap:12px;text-align:left;min-height:65px;padding:14px;background:#322541;color:white;border:1px solid #694b78;border-radius:14px}
+.answer:hover:not(:disabled){border-color:#ffa4dc;background:#483052}
+.answer:disabled{cursor:default}
+.letter{display:grid;place-items:center;flex-shrink:0;width:31px;height:31px;border-radius:9px;background:#60456c;font-weight:bold}
+.answer.correct{border-color:#75f5bb;background:#164435}
+.answer.wrong{border-color:#ff7d9f;background:#54243e}
+.feedback{background:#30243f;padding:15px;border-radius:13px;margin-top:17px;line-height:1.7}
+.feedback strong{display:block;margin-bottom:5px}
+.actions{display:flex;justify-content:flex-end;margin-top:16px}
+.result{text-align:center}
+.score{font-size:65px;font-weight:1000;color:#ffa8df;margin:22px}
+.review{text-align:left;margin-top:25px}
+details{padding:13px 0;border-bottom:1px solid #63476f}
+summary{cursor:pointer;line-height:1.5}
+footer{text-align:center;color:#b49bc6;font-size:12px;padding:12px}
+@media(max-width:580px){
+ body{padding:10px}
+ .devices,.answers{grid-template-columns:1fr}
+ .monitorRows{grid-template-columns:1fr 1fr}
+ .panel{border-radius:19px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="logo">🌸 BIN <span>QUIZ</span> 🎀</div>
+ <div class="sub">Cute mode · Smart challenge · FAKE MONITOR 2.0</div>
+</header>
+
+<section id="home" class="panel">
+ <span class="tag">💗 WELCOME BACK</span>
+ <h1 style="margin-top:18px">Chọn thiết bị của mày</h1>
+ <p>Chọn giao diện phù hợp rồi bắt đầu thử thách 10 câu hỏi. Giao diện tự thích ứng với màn hình của mày.</p>
+ <div class="devices">
+  <button class="device" onclick="selectDevice('computer')">
+   <span class="emoji">🖥️</span><b>Máy tính</b><small>PC / Laptop</small>
+  </button>
+  <button class="device" onclick="selectDevice('phone')">
+   <span class="emoji">📱</span><b>Điện thoại</b><small>Mobile mode</small>
+  </button>
+ </div>
+ <div class="grid3">
+  <div class="stat"><b>10</b><small>Câu hỏi</small></div>
+  <div class="stat"><b>10</b><small>Điểm tối đa</small></div>
+  <div class="stat"><b>2.0</b><small>Monitor giả lập</small></div>
+ </div>
+ <button class="primary wide" onclick="openMonitor()">🪄 MỞ FAKE MONITOR 2.0</button>
+</section>
+
+<section id="monitor" class="panel monitor hidden">
+ <div class="monitorHead">
+  <div><span class="tag">FAKE MONITOR 2.0</span><h2 style="margin:12px 0 4px">🌷 Trung tâm giám sát giả lập</h2></div>
+  <span class="live">SIMULATION MODE</span>
+ </div>
+ <p>Dashboard trang trí cho game. Các chỉ số dưới đây là dữ liệu minh họa, không phải dữ liệu thật của thiết bị.</p>
+ <div class="scanbox">
+  <b>✨ Trạng thái hệ thống</b>
+  <div id="scanStatus" style="margin-top:10px">Đang chờ bắt đầu mô phỏng...</div>
+  <div class="scanline"><div id="scanbar" class="scanbar"></div></div>
+  <button id="scanBtn" class="primary" onclick="runFakeScan()">▶ CHẠY MÔ PHỎNG</button>
+ </div>
+ <div class="monitorRows">
+  <div class="mrow">📡 Kết nối<b>DEMO ONLINE</b></div>
+  <div class="mrow">🔋 Pin giả lập<b id="fakeBattery">87%</b></div>
+  <div class="mrow">🧠 Trạng thái game<b>READY</b></div>
+  <div class="mrow">🛡️ Quyền riêng tư<b>Không truy cập cảm biến</b></div>
+  <div class="mrow">💾 Dữ liệu<b>Chỉ hiển thị giả lập</b></div>
+  <div class="mrow">🌐 Mạng<b>DEMO CONNECTION</b></div>
+ </div>
+ <p class="notice">🔒 Không sử dụng camera, micro, GPS, không quét file hay gửi dữ liệu ra ngoài.</p>
+ <button class="primary wide" onclick="closeMonitor()">← QUAY LẠI</button>
+</section>
+
+<section id="game" class="panel hidden">
+ <div class="topline"><span id="counter">CÂU 1 / 10</span><span>🌸 Điểm: <b id="score">0</b></span></div>
+ <div class="track"><div id="bar" class="bar"></div></div>
+ <span id="category" class="tag">KIẾN THỨC</span>
+ <h2 id="question" class="question"></h2>
+ <div id="answers" class="answers"></div>
+ <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+ <div class="actions"><button id="nextBtn" class="primary hidden" onclick="nextQuestion()">CÂU TIẾP →</button></div>
+</section>
+
+<section id="result" class="panel result hidden">
+ <span class="tag">🎀 KẾT QUẢ CỦA MÀY</span>
+ <h2 id="resultTitle" style="margin-top:18px">Hoàn thành!</h2>
+ <div id="finalScore" class="score">0/10</div>
+ <p id="resultMessage"></p>
+ <div class="grid3">
+  <div class="stat"><b id="correctCount">0</b><small>Câu đúng</small></div>
+  <div class="stat"><b id="wrongCount">0</b><small>Câu sai</small></div>
+  <div class="stat"><b>10</b><small>Tổng câu</small></div>
+ </div>
+ <button class="primary wide" onclick="startGame()">🔄 CHƠI LẠI</button>
+ <button class="primary wide" onclick="openMonitor()">🌷 MỞ FAKE MONITOR</button>
+ <div id="review" class="review"></div>
+</section>
+<footer>💗 BIN QUIZ · Cute theme · FAKE MONITOR 2.0</footer>
+</div>
+
+<script>
+"use strict";
+const questions=[
+{cat:"MINECRAFT",q:"Vật phẩm nào cần để chế tạo bàn phù phép?",a:["Kim cương","Sắt thỏi","Đá cuội","Than"],c:0,e:"Bàn phù phép cần 2 kim cương, 4 obsidian và 1 quyển sách."},
+{cat:"ROBLOX",q:"Roblox Studio chủ yếu dùng ngôn ngữ nào?",a:["Python","Luau","Java","C++"],c:1,e:"Roblox Studio sử dụng Luau, một ngôn ngữ phát triển từ Lua."},
+{cat:"TOÁN HỌC",q:"Xe chạy 60 km/h trong 30 phút. Xe đi được bao xa?",a:["15 km","20 km","30 km","60 km"],c:2,e:"30 phút = 0,5 giờ. Quãng đường là 60 × 0,5 = 30 km."},
+{cat:"LOGIC",q:"Dãy số 2, 6, 12, 20, 30, ... Số tiếp theo?",a:["36","40","42","44"],c:2,e:"Các hiệu là 4, 6, 8, 10. Tiếp theo cộng 12, được 42."},
+{cat:"VŨ TRỤ",q:"Hành tinh nào nổi tiếng với hệ vành đai lớn?",a:["Sao Hỏa","Sao Kim","Sao Thổ","Sao Thủy"],c:2,e:"Sao Thổ nổi tiếng với hệ vành đai gồm nhiều băng và đá."},
+{cat:"HTML",q:"Thẻ HTML nào dùng để tạo liên kết?",a:["<p>","<a>","<h1>","<img>"],c:1,e:"Thẻ <a> tạo liên kết; địa chỉ thường nằm trong thuộc tính href."},
+{cat:"KIẾN THỨC",q:"Nước tinh khiết sôi ở bao nhiêu độ C tại áp suất tiêu chuẩn?",a:["50°C","90°C","100°C","120°C"],c:2,e:"Nước tinh khiết sôi ở khoảng 100°C tại áp suất khí quyển tiêu chuẩn."},
+{cat:"GAME",q:"HP trong game thường có nghĩa là gì?",a:["High Power","Health Points","Hyper Play","Hit Player"],c:1,e:"HP thường là Health Points, chỉ lượng máu hoặc sức khỏe."},
+{cat:"TOÁN HỌC",q:"Nếu x + 7 = 15 thì x bằng bao nhiêu?",a:["6","7","8","9"],c:2,e:"x = 15 − 7 = 8."},
+{cat:"CHIẾN THUẬT",q:"Boss báo hiệu sắp tung đòn mạnh. Nên làm gì?",a:["Đứng yên","Canh thời điểm né","Bấm ngẫu nhiên","Bỏ trang bị"],c:1,e:"Quan sát báo hiệu, né đúng lúc rồi phản công."}
+];
+const $=id=>document.getElementById(id);
+let device="computer",index=0,score=0,locked=false,log=[];
+function screen(id){["home","monitor","game","result"].forEach(x=>$(x).classList.toggle("hidden",x!==id))}
+function selectDevice(type){
+ device=type;
+ document.body.dataset.device=type;
+ startGame();
+}
+function openMonitor(){screen("monitor")}
+function closeMonitor(){screen("home")}
+function runFakeScan(){
+ const btn=$("scanBtn"),status=$("scanStatus"),bar=$("scanbar");
+ btn.disabled=true;btn.textContent="ĐANG MÔ PHỎNG...";
+ bar.style.width="0%";
+ const steps=["Khởi tạo giao diện demo...","Kiểm tra trạng thái giả lập...","Đồng bộ dashboard minh họa...","Hoàn tất mô phỏng!"];
+ let i=0;
+ function step(){
+  status.textContent=steps[i];
+  bar.style.width=((i+1)/steps.length*100)+"%";
+  if(i<steps.length-1){i++;setTimeout(step,500)}
+  else{btn.disabled=false;btn.textContent="↻ CHẠY LẠI";$("fakeBattery").textContent="87% · DEMO"}
+ }
+ step();
+}
+function startGame(){
+ index=0;score=0;locked=false;log=[];
+ $("score").textContent="0";
+ screen("game");render();
+}
+function render(){
+ locked=false;const item=questions[index];
+ $("counter").textContent=`CÂU ${index+1} / ${questions.length}`;
+ $("bar").style.width=(index/questions.length*100)+"%";
+ $("category").textContent=item.cat;
+ $("question").textContent=item.q;
+ $("feedback").classList.add("hidden");
+ $("nextBtn").classList.add("hidden");
+ $("answers").innerHTML="";
+ item.a.forEach((text,i)=>{
+  const b=document.createElement("button");
+  b.className="answer";
+  const l=document.createElement("span");l.className="letter";l.textContent="ABCD"[i];
+  const t=document.createElement("span");t.textContent=text;
+  b.append(l,t);b.onclick=()=>choose(i);$("answers").appendChild(b);
+ });
+}
+function choose(choice){
+ if(locked)return;
+ locked=true;const item=questions[index],ok=choice===item.c;
+ if(ok)score++;
+ log.push({choice,ok});
+ $("score").textContent=score;
+ [...$("answers").children].forEach((b,i)=>{
+  b.disabled=true;
+  if(i===item.c)b.classList.add("correct");
+  if(i===choice&&!ok)b.classList.add("wrong");
+ });
+ $("feedback").classList.remove("hidden");
+ $("feedback").replaceChildren();
+ const title=document.createElement("strong");
+ title.textContent=ok?"🌸 Chính xác! +1 điểm":"💗 Chưa đúng rồi!";
+ title.style.color=ok?"#91ffd1":"#ff9fc9";
+ const msg=document.createElement("span");msg.textContent=item.e;
+ $("feedback").append(title,msg);
+ $("bar").style.width=((index+1)/questions.length*100)+"%";
+ $("nextBtn").textContent=index===questions.length-1?"XEM KẾT QUẢ →":"CÂU TIẾP →";
+ $("nextBtn").classList.remove("hidden");
+}
+function nextQuestion(){
+ if(!locked)return;
+ index++;
+ if(index>=questions.length)finish();else render();
+}
+function finish(){
+ screen("result");
+ $("finalScore").textContent=score+"/10";
+ $("correctCount").textContent=score;
+ $("wrongCount").textContent=10-score;
+ $("resultTitle").textContent=score===10?"THIÊN TÀI! 🏆":score>=8?"CAO THỦ! 🌟":score>=5?"KHÁ ỔN! 🎀":"CỐ LÊN NHA! 🌷";
+ $("resultMessage").textContent=score===10?"Hoàn hảo, mày trả lời đúng hết!":score>=8?"Kết quả rất tốt!":score>=5?"Xem lại câu sai rồi thử lại nhé.":"Không sao, luyện thêm là lên trình.";
+ $("review").replaceChildren();
+ const heading=document.createElement("h3");heading.textContent="📋 Xem lại đáp án";$("review").append(heading);
+ questions.forEach((item,i)=>{
+  const d=document.createElement("details"),s=document.createElement("summary"),p=document.createElement("p");
+  s.textContent=(log[i].ok?"✓ ":"✗ ")+`Câu ${i+1}: `+item.q;
+  p.textContent="Đáp án đúng: "+ "ABCD"[item.c]+". "+item.a[item.c]+". "+item.e;
+  d.append(s,p);$("review").append(d);
+ });
+}
+</script>
+</body>
+</html>
